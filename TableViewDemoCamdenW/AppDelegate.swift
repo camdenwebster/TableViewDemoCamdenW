@@ -30,8 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        if viewController is NewItemViewController {
-            if let newVC = tabBarController.storyboard?.instantiateViewController(withIdentifier: "NewItemViewController") {
+        if viewController is NewEditTableViewController {
+            if let newVC = tabBarController.storyboard?.instantiateViewController(withIdentifier: "NewEditTableViewController") {
                 tabBarController.present(newVC, animated: true)
                 return false
             }
