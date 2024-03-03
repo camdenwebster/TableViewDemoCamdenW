@@ -16,9 +16,9 @@ class ToDo: Event {
     var title: String?
     var start: Date?
     var due: Date?
-    var size: Size
-    var priority: Priority
-    var difficulty: Difficulty
+    var size: Int
+    var priority: Int
+    var difficulty: Int
     var category: String?
     var notes: String?
     
@@ -27,14 +27,14 @@ class ToDo: Event {
         get {
             var taskTime: TimeInterval = 0
             switch size {
-            case .small:
+            case 0:
                 taskTime = 15 * 60
-            case .medium:
+            case 1:
                 taskTime = 30 * 60
-            case .large:
+            case 2:
                 taskTime = 60 * 60
-            case .extraLarge:
-                taskTime = 90 * 60
+            default:
+                taskTime = 30 * 60
             }
             return taskTime
         }
@@ -42,21 +42,19 @@ class ToDo: Event {
             let taskTime: TimeInterval = 0
             switch taskTime {
             case 0...900: // 0-15 minutes (0-15 minutes is 0 seconds to 900 seconds)
-                size = .small
+                size = 0
             case 901...1800: // 16-30 minutes (16-30 minutes is 901 seconds to 1800 seconds)
-                size = .medium
+                size = 1
             case 1801...3600: // 31-60 minutes (31-60 minutes is 1801 seconds to 3600 seconds)
-                size = .large
-            case 3601...5400: // 61-90 minutes (61-90 minutes is 3601 seconds to 5400 seconds)
-                size = .extraLarge
+                size = 2
             default:
-                size = .extraLarge
+                size = 1
             }
         }
     }
 
     // Initialize the static properties
-    init(id: Int, title: String?, start: Date? = nil, due: Date?, size: Size, priority: Priority, difficulty: Difficulty, category: String? = nil, notes: String? = nil) {
+    init(id: Int, title: String?, start: Date? = nil, due: Date?, size: Int, priority: Int, difficulty: Int, category: String? = nil, notes: String? = nil) {
         self.id = id
         self.title = title
         self.start = start

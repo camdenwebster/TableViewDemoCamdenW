@@ -16,6 +16,8 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
     ["Category"]
     ]
     
+    var toDo = ToDo(id: 1, title: "New Task", due: .now, size: 1, priority: 1, difficulty: 1, notes: "Test notes")
+    
     let dateFormatter: DateFormatter = DateFormatter()
 
     @IBOutlet weak var titleTextField: UITextField!
@@ -34,23 +36,27 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var newTaskButton: UIBarButtonItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     
-    var toDo = ToDo(id: 0, title: nil, start: .now, due: .now, size: .medium, priority: .medium, difficulty: .medium)
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
+        // Set up text fields
         titleTextField.becomeFirstResponder()
-        //newTaskButton.setTitle("Add", for: UIControl.State.normal)
-        newTaskButton.isEnabled = false
+        titleTextField.text = toDo.title
+        if titleTextField.text == nil {
+            newTaskButton.isEnabled = false
+        }
         titleTextField.delegate = self
-        // Set up segemented controls
-        sizeControl.selectedSegmentIndex = 1
-        difficultyControl.selectedSegmentIndex = 1
-        priorityControl.selectedSegmentIndex = 1
+        notesTextView.text = toDo.notes
+        // Set up dates
+        startDatePicker.date = toDo.start ?? .now
+        dueDatePicker.date = toDo.due ?? .now
+        // Set up segmented controls
+        sizeControl.selectedSegmentIndex = toDo.size
+        difficultyControl.selectedSegmentIndex = toDo.difficulty
+        priorityControl.selectedSegmentIndex = toDo.priority
     }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return viewElements.count
@@ -61,52 +67,6 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
         return viewElements[section].count
     }
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -114,7 +74,6 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
     }
-    */
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         titleTextField.resignFirstResponder()
@@ -139,12 +98,12 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func sizeControlTapped(_ sender: UISegmentedControl) {
         switch sizeControl.selectedSegmentIndex {
         case 0:
-            toDo.size = .small
+            toDo.size = 0
         case 1:
-            toDo.size = .medium
+            toDo.size = 1
         case 2:
-            toDo.size = .large
-        default: toDo.size = .medium
+            toDo.size = 2
+        default: toDo.size = 3
         }
         print("Set task size to \(toDo.size)")
     }
@@ -166,12 +125,12 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func difficultyControlTapped(_ sender: UISegmentedControl) {
         switch difficultyControl.selectedSegmentIndex {
         case 0:
-            toDo.difficulty = .low
+            toDo.difficulty = 0
         case 1:
-            toDo.difficulty = .medium
+            toDo.difficulty = 1
         case 2:
-            toDo.difficulty = .high
-        default: toDo.difficulty = .medium
+            toDo.difficulty = 2
+        default: toDo.difficulty = 1
         }
         print("Set task difficulty to \(toDo.difficulty)")
     }
@@ -179,12 +138,12 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func priorityControlTapped(_ sender: UISegmentedControl) {
         switch priorityControl.selectedSegmentIndex {
         case 0:
-            toDo.priority = .low
+            toDo.priority = 0
         case 1:
-            toDo.priority = .medium
+            toDo.priority = 1
         case 2:
-            toDo.priority = .high
-        default: toDo.priority = .medium
+            toDo.priority = 2
+        default: toDo.priority = 1
         }
         print("Set task priority to \(toDo.priority)")
     }
@@ -195,10 +154,9 @@ class NewEditTableViewController: UITableViewController, UITextFieldDelegate {
     
     @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {
         guard let text = titleTextField.text, !text.isEmpty else {
-
             return
         }
-        // If a value wss entered we'll log it and close the sheet
+        // If a value was entered we'll log it and close the sheet
         toDo.title = titleTextField.text
         print("Setting title to \(toDo.title ?? "New Task")")
         dismiss(animated: true, completion: nil)

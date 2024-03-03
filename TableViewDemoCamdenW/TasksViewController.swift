@@ -10,9 +10,8 @@ import UIKit
 class TasksViewController: UITableViewController {
     
     // Default task to be added at app launch
-    var firstToDo = ToDo(id: 1, title: "New Task", due: .now, size: .medium, priority: .medium, difficulty: .medium)
-    // Array to hold rows of cars
     var todos = [ToDo]()
+    var firstToDo = ToDo(id: 1, title: "New Task", due: .now, size: 1, priority: 1, difficulty: 1, notes: "Test notes")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +22,6 @@ class TasksViewController: UITableViewController {
             guard todo.title != nil else {
                 return
             }
-            let title = todo.title
         }
     }
     
